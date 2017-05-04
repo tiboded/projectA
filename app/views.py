@@ -20,7 +20,7 @@ def signup():
                 new_user.admin=True
             db.session.add(new_user)
             db.session.commit()
-            login_user(new_user,remember=form.remember.data)
+            login_user(new_user)#,remember=form.remember.data)
             return redirect(url_for('projects_list'))
         flash('Email or username already taken, please try again')
         return redirect(url_for('signup'))
@@ -33,7 +33,7 @@ def login():
         username,password=form.username.data,form.password.data
         user=User.query.filter(User.username==username).first()
         if user and bcrypt.check_password_hash(user.password,form.password.data):
-            login_user(user,remember=form.remember.data)
+            login_user(user)#,remember=form.remember.data)
             flash('Welcome, '+current_user.username)
             return redirect(url_for('projects_list'))
         flash('Username or password incorrect, please try again')
@@ -148,7 +148,7 @@ def reset_all():
         return redirect(url_for('index'))
     all_users=User.query.all()
     all_projects=Project.query.all()
-    flash(str(len(all_users))+' users and '+str(len(all_projects))+' projects deleted.')
+    flash(str(len(all_users))+' user(s) and '+str(len(all_projects))+' project(s) deleted.')
     for item in all_users+all_projects:
         db.session.delete(item)
     db.session.commit()
