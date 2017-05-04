@@ -1,5 +1,5 @@
 from flask import render_template,redirect,url_for,flash,request
-from flask_login import login_user,login_required,logout_user,current_user
+from flask_login import login_user,login_required,fresh_login_required,logout_user,current_user
 from forms import LoginForm,SignupForm,AddProjectForm
 from models import User,Project
 from . import app,db,bcrypt
@@ -20,7 +20,7 @@ def signup():
                 new_user.admin=True
             db.session.add(new_user)
             db.session.commit()
-            login_user(new_user)#,remember=form.remember.data)
+            login_user(new_user,remember=form.remember.data)
             return redirect(url_for('projects_list'))
         flash('Email or username already taken, please try again')
         return redirect(url_for('signup'))
@@ -33,7 +33,7 @@ def login():
         username,password=form.username.data,form.password.data
         user=User.query.filter(User.username==username).first()
         if user and bcrypt.check_password_hash(user.password,form.password.data):
-            login_user(user)#,remember=form.remember.data)
+            login_user(user,remember=form.remember.data)
             flash('Welcome, '+current_user.username)
             return redirect(url_for('projects_list'))
         flash('Username or password incorrect, please try again')
@@ -54,7 +54,7 @@ def projects_list():
     return render_template('projects_list.html',projects=projects)
 #}}}
 @app.route('/delete_project/',methods=['POST'])#{{{
-@login_required
+@fresh_login_required
 def delete_project():
     if not current_user.admin:
         flash('Admin rights required')
@@ -93,7 +93,7 @@ def leave_project():
     return redirect(url_for('projects_list'))
 #}}}
 @app.route('/free_project/',methods=['POST'])#{{{
-@login_required
+@fresh_login_required
 def free_project():
     project=Project.query.get(request.form['project_id'])
     User.query.get(project.user_id).project_id=0
@@ -103,7 +103,7 @@ def free_project():
     return redirect(url_for('projects_list'))
 #}}}
 @app.route('/add_project/',methods=['GET','POST'])#{{{
-@login_required
+@fresh_login_required
 def add_project():
     if not current_user.admin:
         flash('Admin rights required')
@@ -127,7 +127,7 @@ def users_list():
     return render_template('users_list.html',users=users)
 #}}}
 @app.route('/delete_user/',methods=['POST'])#{{{
-@login_required
+@fresh_login_required
 def delete_user():
     if not current_user.admin:
         flash('Admin rights required')
@@ -141,7 +141,7 @@ def delete_user():
     return redirect(url_for('users_list'))
 #}}}
 @app.route('/reset_all/')#{{{
-@login_required
+@fresh_login_required
 def reset_all():
     if not current_user.admin:
         flash('Admin rights required')
@@ -155,7 +155,7 @@ def reset_all():
     return redirect(url_for('index'))
 #}}}
 @app.route('/make_admin/',methods=['POST'])#{{{
-@login_required
+@fresh_login_required
 def make_admin():
     if not current_user.admin:
         flash('Admin rights required')
@@ -167,7 +167,7 @@ def make_admin():
     return redirect(url_for('users_list'))
 #}}}
 @app.route('/make_normal_user/',methods=['POST'])#{{{
-@login_required
+@fresh_login_required
 def make_normal_user():
     if not current_user.admin:
         flash('Admin rights required')
