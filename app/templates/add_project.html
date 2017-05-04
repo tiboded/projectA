@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ super() }}add project{% endblock %}
+
+{% block body %}
+	<form method='post'>
+		{{ form.hidden_tag() }}
+		{{ form.title(placeholder='Title') }}
+		<input type='submit' value='Add project'/><br/>
+		{{ form.text(placeholder='Description here',rows=20,cols=60) }}<br/>
+	</form>
+{% endblock %}

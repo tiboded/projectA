@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ super() }}users list{% endblock %}
+
+{% block body %}
+	{% for user in users %}
+	<div style='background: #DDDDFF; padding: 10px; margin: 5px'>
+	<p style='font-weight: bolder'>{{ user.username }}</p>
+		{% if user!=current_user %}
+	<form action='{{ url_for("delete_user") }}' method='post'>
+		<input type='hidden' name='user_id' value='{{ user.id }}'/>
+		<input type='submit' value='Delete user'/>
+	</form>
+			{% if user.admin %}
+	<form action='{{ url_for("make_normal_user") }}' method='post'>
+		<input type='hidden' name='user_id' value='{{ user.id }}'/>
+		<input type='submit' value='Make normal user'/>
+	</form>
+			{% elif not user.project_id %}
+	<form action='{{ url_for("make_admin") }}' method='post'>
+		<input type='hidden' name='user_id' value='{{ user.id }}'/>
+		<input type='submit' value='Make admin'/>
+	</form>
+			{% endif %}
+		{% endif %}
+	</div>
+
+	{% endfor %}
+
+{% endblock %}

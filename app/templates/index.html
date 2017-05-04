@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<title>projectA - index</title>
+	</head>
+
+	<body>
+	<h1>Project A</h1>
+
+	{% with messages=get_flashed_messages() %}
+	{% if messages %}
+		{% for message in messages %}
+		<div style='color: red'>{{ message }}</div>
+		{% endfor %}
+	{% endif %}
+		{% endwith %}
+
+	{% if current_user.is_authenticated %}
+		<h3><a href='{{url_for("projects_list")}}'>Projects list</a></h3>
+		{% if current_user.admin %}
+		<h3><a href='{{url_for("add_project")}}'>Add_project</a></h3>
+		<h3><a href='{{url_for("users_list")}}'>Users list</a></h3>
+		<h3><a href='{{url_for("reset_all")}}'>Reset users</a></h3>
+		{% endif %}
+		<h3><a href='{{url_for("logout")}}'>Log out</a></h3>
+	{% else %}
+		<h3><a href='{{url_for("signup")}}'>Sign up</a></h3>
+		<h3><a href='{{url_for("login")}}'>Log in</a></h3>
+	{% endif %}
+	</body>
+</html>

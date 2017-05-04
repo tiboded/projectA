@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ super() }}signup{% endblock %}
+
+{% block body %}
+<form method='post'>
+	{{ form.hidden_tag() }}
+	{{ form.email(placeholder='Email') }}<br/>
+	{{ form.username(placeholder='Username') }}<br/>
+	{{ form.password(placeholder='Password') }}<br/><br/>
+	<input type='submit' value='Sign up'>
+</form>
+{% endblock %}

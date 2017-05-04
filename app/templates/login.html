@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ super() }}login{% endblock %}
+
+{% block body %}
+<form method='post'>
+	{{ form.hidden_tag() }}
+	{{ form.username(placeholder='Username') }}
+	{{ form.password(placeholder='Password') }}
+	<input type='submit' value='Log in'>
+</form>
+{% endblock %}

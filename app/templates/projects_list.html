@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ super() }}projects list{% endblock %}
+
+{% block body %}
+	{% for project in projects %}
+	<div style='background: #DDDDFF; padding: 10px; margin: 5px'>
+	<p style='font-weight: bolder'>{{ project.title }}</p>
+	<p>{{ project.text }}</p>
+
+	{% if current_user.admin %}
+	<form action='{{ url_for("delete_project") }}' method='post'>
+		<input type='hidden' name='project_id' value='{{ project.id }}'/>
+		<input type='submit' value='Delete project'/>
+	</form>
+		{% if project.user_id %}
+	<form action='{{ url_for("free_project") }}' method='post'>
+		<input type='hidden' name='project_id' value='{{ project.id }}'/>
+		<input type='submit' value='Free project'/>
+	</form>
+		{% endif %}
+
+	{% elif not current_user.project_id and not project.user_id %}
+	<form action='{{ url_for("select_project") }}' method='post'>
+		<input type='hidden' name='project_id' value='{{ project.id }}'/>
+		<input type='submit' value='Select project'/>
+	</form>
+
+	{% elif current_user.project_id==project.id %}
+	<form action='{{ url_for("leave_project") }}' method='post'>
+		<input type='submit' value='Leave project'/>
+	</form>
+	{% endif %}
+	</div>
+	{% endfor %}
+
+{% endblock %}
