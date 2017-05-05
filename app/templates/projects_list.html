@@ -6,7 +6,7 @@
 	{% for project in projects %}
 	<div style='background: #DDDDFF; padding: 10px; margin: 5px'>
 	<p style='font-weight: bolder'>{{ project.title }}</p>
-	<p>{{ project.text }}</p>
+	<p style='white-space: pre-wrap'>{{ project.text }}</p>
 
 	{% if current_user.admin %}
 	<form action='{{ url_for("delete_project") }}' method='post'>

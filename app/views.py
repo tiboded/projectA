@@ -1,4 +1,4 @@
-from flask import render_template,redirect,url_for,flash,request
+from flask import render_template,redirect,url_for,flash,request,Response
 from flask_login import login_user,login_required,fresh_login_required,logout_user,current_user
 from forms import LoginForm,SignupForm,AddProjectForm
 from models import User,Project
@@ -177,6 +177,29 @@ def make_normal_user():
     db.session.commit()
     flash(user.username+' lost admin rights')
     return redirect(url_for('users_list'))
+#}}}
+@app.route('/output_csv/')#{{{
+@login_required
+def output_csv():
+    if not current_user.admin:
+        flash('Admin rights required')
+        return redirect(url_for('index'))
+    def generate():
+        with app.app_context():
+            column_names=['user','title','text']
+            projects=Project.query.all()
+            rows=[]
+            for project in projects:
+                if project.user_id:
+                    user=User.query.get(project.user_id).username
+                else:
+                    user='NA'
+                title=project.title
+                text=project.text.replace('\r\n',' ')
+                rows.append([user,title,text])
+            for row in rows:
+                yield ';'.join(row)+'\n'
+    return Response(generate(),mimetype='text/csv')
 #}}}
 #select project with project_id, free project with user_id
 #"admin_required" with flask-login

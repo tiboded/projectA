@@ -20,6 +20,7 @@
 		{% if current_user.admin %}
 		<h3><a href='{{url_for("add_project")}}'>Add_project</a></h3>
 		<h3><a href='{{url_for("users_list")}}'>Users list</a></h3>
+		<h3><a href='{{url_for("output_csv")}}'>Output CSV</a></h3>
 		<h3><a href='{{url_for("reset_all")}}'>Reset users</a></h3>
 		{% endif %}
 		<h3><a href='{{url_for("logout")}}'>Log out</a></h3>
