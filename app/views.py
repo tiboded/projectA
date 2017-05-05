@@ -195,7 +195,11 @@ def output_csv():
                 else:
                     user='NA'
                 title=project.title
+                if not title:
+                    title='NA'
                 text=project.text.replace('\r\n',' ')
+                if not text:
+                    text='NA'
                 rows.append([user,title,text])
             for row in rows:
                 yield ';'.join(row)+'\n'
